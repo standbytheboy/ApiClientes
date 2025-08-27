@@ -1,3 +1,4 @@
+using ApiClientes.Services;
 using Microsoft.EntityFrameworkCore;
 namespace ApiClientes
 {
@@ -14,7 +15,7 @@ namespace ApiClientes
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient<ClienteService>();
 
             var app = builder.Build();
 

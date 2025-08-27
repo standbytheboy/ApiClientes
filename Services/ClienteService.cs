@@ -12,7 +12,7 @@ namespace ApiClientes.Services
 
         public async Task<bool> ValidarCpfAsync(string cpf)
         {
-            var url = $"<https://scpa-backend.saude.gov.br/public/scpa-usuario/validacao-cpf/{cpf}>";
+            var url = $"https://scpa-backend.saude.gov.br/public/scpa-usuario/validacao-cpf/{cpf}";
             var response = await _httpClient.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
@@ -20,8 +20,10 @@ namespace ApiClientes.Services
                 return false;  
             }
 
-            var resultado = await response.Content.ReadFromJsonAsync<ValidacaoCpfResponse>();
-            return resultado.Valido;
+            var responseString = await response.Content.ReadAsStringAsync();
+            bool.TryParse(responseString, out bool isCpfValido);
+
+            return isCpfValido;
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using ApiClientes.Data;
 using ApiClientes.Models;
+using ApiClientes.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +11,11 @@ namespace ApiClientes.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly AppDbContext _contextFromDb;
-        public ClienteController(AppDbContext contextFromDb)
+        private readonly ClienteService _clienteService;
+        public ClienteController(AppDbContext contextFromDb, ClienteService clienteService)
         {
             _contextFromDb = contextFromDb;
+            _clienteService = clienteService;
         }
 
         [HttpGet]
@@ -52,6 +55,7 @@ namespace ApiClientes.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (!await _clienteService.ValidarCpfAsync(cliente.Cpf)) { throw new Exception("CPF inválido"); }
             _contextFromDb.Clientes.Add(cliente);
             await _contextFromDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = cliente.Id }, cliente);

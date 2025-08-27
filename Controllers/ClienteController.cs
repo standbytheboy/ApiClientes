@@ -18,8 +18,17 @@ namespace ApiClientes.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<Cliente> clientes = await _contextFromDb.Clientes.Include(c => c.Enderecos)
-                .ToListAsync();
+            var clientes = await _contextFromDb.Clientes
+            .Select(c => new
+            {
+                // objeto para limitar o que aparece em tela
+                c.Id,
+                c.Nome,
+                c.Email,
+                c.Telefone,
+                c.DataNascimento
+            })
+            .ToListAsync();
             return Ok(clientes);
         }
 
